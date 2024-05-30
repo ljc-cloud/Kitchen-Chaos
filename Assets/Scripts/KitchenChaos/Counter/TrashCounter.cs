@@ -1,5 +1,6 @@
 using KitchenChaos.Player;
 using System;
+using Unity.Netcode;
 
 namespace KitchenChaos.Counter
 {
@@ -16,9 +17,22 @@ namespace KitchenChaos.Counter
         {
             if (player.HasKitchenObject)
             {
-                player.KitchenObj.DestroySelf();
-                OnDropSomething?.Invoke(this, EventArgs.Empty);
+                KitchenObject.DestroyKitchenObject(player.KitchenObj);
+                InteractLogicServerRpc();
+                //player.KitchenObj.DestroySelf();
+                //OnDropSomething?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void InteractLogicServerRpc()
+        {
+            InteractLogicClientRpc();
+        }
+        [ClientRpc]
+        private void InteractLogicClientRpc()
+        {
+            OnDropSomething?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using KitchenChaos.Network;
 using KitchenChaos.SO;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace KitchenChaos
@@ -18,8 +20,9 @@ namespace KitchenChaos
         }
 
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             KitchenObjectSoList = new List<KitchenObjectSO>();
         }
 
@@ -33,13 +36,27 @@ namespace KitchenChaos
             {
                 return;
             }
+            var index = KitchenGameMultiPlayer.Instance.GetKitchenObjectIndex(kitchenObjectSo);
+            AddIngredientServerRpc(index);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void AddIngredientServerRpc(int kitchenObjectSoIndex)
+        {
+            AddIngredientClientRpc(kitchenObjectSoIndex);
+        }
+        [ClientRpc]
+        private void AddIngredientClientRpc(int kitchenObjectSoIndex)
+        {
+            var kitchenObjectSo = KitchenGameMultiPlayer.Instance.GetKitchenObjectSOByIndex(kitchenObjectSoIndex);
             KitchenObjectSoList.Add(kitchenObjectSo);
             OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs
             {
                 kitchenObjectSo = kitchenObjectSo
             });
         }
-        
+
+
         public bool TryAddIngredient(KitchenObjectSO kitchenObjectSo)
         {
             if (!validKitchenObjectSoList.Contains(kitchenObjectSo))
@@ -50,11 +67,8 @@ namespace KitchenChaos
             {
                 return false;
             }
-            KitchenObjectSoList.Add(kitchenObjectSo);
-            OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs
-            {
-                kitchenObjectSo = kitchenObjectSo
-            });
+            var index = KitchenGameMultiPlayer.Instance.GetKitchenObjectIndex(kitchenObjectSo);
+            AddIngredientServerRpc(index);
             return true;
         }
     }

@@ -1,3 +1,4 @@
+using KitchenChaos.Network;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,13 +13,13 @@ public class TestNetworkUI : MonoBehaviour
     {
         hostButton.onClick.AddListener(() =>
         {
-            NetworkManager.Singleton.StartHost();
+            KitchenGameMultiPlayer.Instance.StartHost();
             gameObject.SetActive(false);
         });
 
         clientButton.onClick.AddListener(() =>
         {
-            NetworkManager.Singleton.StartClient();
+            KitchenGameMultiPlayer.Instance.StartClient();
             gameObject.SetActive(false);
         });
     }

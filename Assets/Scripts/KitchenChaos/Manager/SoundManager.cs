@@ -68,12 +68,10 @@ namespace KitchenChaos.Manager
 
         private void DeliveryManagerOnRecipeSuccess(object sender, System.EventArgs e)
         {
-            Debug.Log("Play Correct Sound");
             PlaySound(audioClipRefsSo.deliverySuccess, DeliveryCounter.Instance.transform.position);
         }
         private void DeliveryManagerOnRecipeFail(object sender, System.EventArgs e)
         {
-            Debug.Log("Play InCorrect Sound");
             PlaySound(audioClipRefsSo.deliveryFail, DeliveryCounter.Instance.transform.position);
         }
 

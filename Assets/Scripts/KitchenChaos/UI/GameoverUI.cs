@@ -1,16 +1,26 @@
 ﻿using UnityEngine;
 using KitchenChaos.Manager;
 using TMPro;
+using UnityEngine.UI;
+using Unity.Netcode;
 
 namespace KitchenChaos.UI
 {
     public class GameoverUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI deliveredSuccessNumText;
+        [SerializeField] private Button playAgainButton;
 
         private void Start()
         {
             GameManager.Instance.OnStateChanged += GameManagerOnStateChanged;
+
+            playAgainButton.onClick.AddListener(() =>
+            {
+                NetworkManager.Singleton.Shutdown();
+                Loader.Load(Loader.Scene.MainMenuScene);
+            });
+
             Hide();
         }
 

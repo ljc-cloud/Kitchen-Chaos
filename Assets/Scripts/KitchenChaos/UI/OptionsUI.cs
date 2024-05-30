@@ -79,7 +79,7 @@ namespace KitchenChaos.UI
 
         private void Start()
         {
-            GameManager.Instance.OnGameUnPause += (sender, e) => Hide();
+            GameManager.Instance.OnLocalGameUnpause += (sender, e) => Hide();
             UpdateVisual();
             Hide();
             HidePressKeyToRebind();

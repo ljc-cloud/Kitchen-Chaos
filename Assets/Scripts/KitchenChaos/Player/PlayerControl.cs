@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using KitchenChaos.Counter;
 using KitchenChaos.Interface;
 using KitchenChaos.Manager;
@@ -19,13 +20,14 @@ namespace KitchenChaos.Player
         public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
         public class OnSelectedCounterChangedEventArgs : EventArgs
         {
-            public BaseCounter selectedCounter;
+            public BaseCounter SelectedCounter;
         }
 
         [SerializeField] private float moveSpeed = 7f;
         [SerializeField] private float rotateSpeed = 7f;
-        //[SerializeField] private GameInput gameInput;
         [SerializeField] private LayerMask counterLayer;
+        [SerializeField] private LayerMask collisionLayer;
+        [SerializeField] private List<Vector3> spawnPositionList;
         [SerializeField] private Transform kitchenObjectHolderPoint;
 
         private Vector3 _lastInteractDir;
@@ -61,7 +63,21 @@ namespace KitchenChaos.Player
             {
                 LocalInstance = this;
             }
+            transform.position = spawnPositionList[(int)OwnerClientId];
             OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
+
+            if (IsServer)
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
+            }
+        }
+
+        private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
+        {
+            if (clientId == OwnerClientId && HasKitchenObject)
+            {
+                KitchenObject.DestroyKitchenObject(KitchenObj);
+            }
         }
 
         private void Update()
@@ -79,6 +95,23 @@ namespace KitchenChaos.Player
         {
             GameInput.Instance.OnInteractAction += GameInputOnOnInteractAction;
             GameInput.Instance.OnInteractAlternateAction += GameInputOnOnInteractAlternateAction;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            if (IsServer)
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnectCallback;
+            }
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            OnPickupSomething = null;
+            OnSelectedCounterChanged = null;
+            GameInput.Instance.OnInteractAction -= GameInputOnOnInteractAction;
+            GameInput.Instance.OnInteractAlternateAction -= GameInputOnOnInteractAlternateAction;
         }
 
         public static void ResetStaticData()
@@ -101,7 +134,6 @@ namespace KitchenChaos.Player
             if (!GameManager.Instance.IsGamePlaying) return;
             if (_selectedCounter != null)
             {
-                Debug.Log("GameInputOnOnInteractAction Invoked");
                 _selectedCounter.Interact(this);
             }
         }
@@ -196,20 +228,17 @@ namespace KitchenChaos.Player
             var moveDir = new Vector3(inputVector.x, 0, inputVector.y).normalized;
 
             var moveDistance = moveSpeed * Time.deltaTime;
-            var playerHeight = 2f;
+            //var playerHeight = 2f;
             var playerRadius = .7f;
-
-            var canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
-                playerRadius, moveDir,
-                moveDistance);
+            var canMove = !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDir, Quaternion.identity,
+                moveDistance, collisionLayer);
 
             if (!canMove)
             {
                 // 查看在x轴上是否可以移动
                 var moveDirX = new Vector3(inputVector.x, 0, 0).normalized;
-                canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
-                    playerRadius, moveDirX,
-                    moveDistance);
+                canMove = moveDir.x != 0 && !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDirX, Quaternion.identity,
+                moveDistance, collisionLayer);
                 if (canMove)
                 {
                     moveDir = moveDirX;
@@ -218,9 +247,8 @@ namespace KitchenChaos.Player
                 {
                     // 查看在z轴上是否可以移动
                     var moveDirZ = new Vector3(0, 0, inputVector.y).normalized;
-                    canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
-                        playerRadius, moveDirZ,
-                        moveDistance);
+                    canMove = moveDir.z != 0 && !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDirZ, Quaternion.identity,
+                moveDistance, collisionLayer);
                     if (canMove)
                     {
                         moveDir = moveDirZ;
@@ -243,7 +271,7 @@ namespace KitchenChaos.Player
 
             OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
             {
-                selectedCounter = _selectedCounter
+                SelectedCounter = _selectedCounter
             });
         }
 

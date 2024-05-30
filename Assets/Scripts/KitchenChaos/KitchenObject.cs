@@ -3,6 +3,7 @@ using KitchenChaos.Network;
 using KitchenChaos.SO;
 using UnityEngine;
 using Unity.Netcode;
+using IKitchenObjectParent = KitchenChaos.Interface.IKitchenObjectParent;
 
 namespace KitchenChaos
 {
@@ -14,6 +15,12 @@ namespace KitchenChaos
 
         public KitchenObjectSO KitchenObjectSo => kitchenObjectSo;
 
+        private FollowTransform _followTransform;
+        protected virtual void Awake()
+        {
+            _followTransform = GetComponent<FollowTransform>();
+        }
+
         public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSo, IKitchenObjectParent kitchenObjectParent)
         {
             KitchenGameMultiPlayer.Instance.SpawnKitchenObject(kitchenObjectSo, kitchenObjectParent);
@@ -22,6 +29,11 @@ namespace KitchenChaos
             //kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
             //return kitchenObject;
         }
+        public static void DestroyKitchenObject(KitchenObject kitchenObject)
+        {
+            KitchenGameMultiPlayer.Instance.DestroyKitchenObject(kitchenObject);
+        }
+
 
         public bool TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject)
         {
@@ -36,6 +48,20 @@ namespace KitchenChaos
 
         public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
         {
+            SetKitchenObjectParentServerRpc(kitchenObjectParent.GetNetworkObject());
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetKitchenObjectParentServerRpc(NetworkObjectReference kitchenObjectParentNetworkReference)
+        {
+            SetKitchenObjectParentClientRpc(kitchenObjectParentNetworkReference);
+        }
+        [ClientRpc]
+        private void SetKitchenObjectParentClientRpc(NetworkObjectReference kitchenObjectParentNetworkReference)
+        {
+            kitchenObjectParentNetworkReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
+            var kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
+
             if (KitchenObjectParent != null)
             {
                 KitchenObjectParent.ClearKitchenObject();
@@ -48,15 +74,18 @@ namespace KitchenChaos
             }
             KitchenObjectParent.KitchenObj = this;
 
-            //transform.parent = KitchenObjectParent.KitchenObjectFollowTransform;
-            //transform.localPosition = Vector3.zero;
+            _followTransform.SetTargetTransform(kitchenObjectParent.KitchenObjectFollowTransform);
         }
         
         public void DestroySelf()
         {
-            KitchenObjectParent.ClearKitchenObject();
             Destroy(gameObject);
         }
+        public void ClearKitchenObjectOnParent()
+        {
+            KitchenObjectParent.ClearKitchenObject();
+        }
+
     }
 }
 

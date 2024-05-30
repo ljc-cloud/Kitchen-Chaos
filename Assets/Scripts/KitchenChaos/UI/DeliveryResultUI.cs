@@ -33,7 +33,6 @@ namespace KitchenChaos.UI
 
         private void DeliveryManager_OnRecipeSuccess(object sender, System.EventArgs e)
         {
-            Debug.Log("Play Correct Anim");
             gameObject.SetActive(true);
             backgroundImage.color = successColor;
             iconImage.sprite = successSprite;
@@ -42,7 +41,6 @@ namespace KitchenChaos.UI
         }
         private void DeliveryManager_OnRecipeFail(object sender, System.EventArgs e)
         {
-            Debug.Log("Play InCorrect Anim");
             gameObject.SetActive(true);
             backgroundImage.color = failColor;
             iconImage.sprite = failSprite;

@@ -34,11 +34,12 @@ namespace KitchenChaos.Counter
         private void OnDestroy()
         {
             PlayerControl.LocalInstance.OnSelectedCounterChanged -= PlayerOnSelectedCounterChanged;
+            PlayerControl.OnAnyPlayerSpawned -= PlayerControlOnOnAnyPlayerSpawned;
         }
 
         private void PlayerOnSelectedCounterChanged(object sender, PlayerControl.OnSelectedCounterChangedEventArgs e)
         {
-            if (counter == e.selectedCounter)
+            if (counter == e.SelectedCounter)
             {
                 Show();
             }

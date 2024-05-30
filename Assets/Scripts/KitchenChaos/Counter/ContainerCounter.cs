@@ -1,6 +1,8 @@
 using System;
+using KitchenChaos.Manager;
 using KitchenChaos.Player;
 using KitchenChaos.SO;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace KitchenChaos.Counter
@@ -13,7 +15,10 @@ namespace KitchenChaos.Counter
 
         public override void Interact(PlayerControl player)
         {
-
+            if (GameManager.Instance.IsGamePause)
+            {
+                return;
+            }
             if (player.HasKitchenObject)
             {
                 if (player.KitchenObj.TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
@@ -24,8 +29,20 @@ namespace KitchenChaos.Counter
             else
             {
                 KitchenObject.SpawnKitchenObject(kitchenObjectSo, player);
-                OnPlayerDragObject?.Invoke(this, EventArgs.Empty);
+                InteractLogicServerRpc();
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void InteractLogicServerRpc()
+        {
+            InteractLogicClientRpc();
+        }
+
+        [ClientRpc]
+        private void InteractLogicClientRpc()
+        {
+            OnPlayerDragObject?.Invoke(this, EventArgs.Empty);
         }
     }
 }

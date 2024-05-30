@@ -17,7 +17,7 @@ namespace KitchenChaos.UI
 
         private void Start()
         {
-            GameManager.Instance.OnTutorialEnd += TutorialUIOnTutorialEnd;
+            GameManager.Instance.OnLocalPlayerReady += GameManager_OnLocalPlayerReady;
 
             moveUpKeyText.text = GameInput.Instance.GetKeyBindingString(GameInput.KeyBinding.MoveUp);
             moveDownKeyText.text = GameInput.Instance.GetKeyBindingString(GameInput.KeyBinding.MoveDown);
@@ -28,9 +28,12 @@ namespace KitchenChaos.UI
             pauseKeyText.text = GameInput.Instance.GetKeyBindingString(GameInput.KeyBinding.Pause);
         }
 
-        private void TutorialUIOnTutorialEnd(object sender, System.EventArgs e)
+        private void GameManager_OnLocalPlayerReady(object sender, System.EventArgs e)
         {
-            Hide();
+            if (GameManager.Instance.IsLocalPlayerReady)
+            {
+                Hide();
+            }
         }
 
         private void Hide() => gameObject.SetActive(false);

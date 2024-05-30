@@ -1,6 +1,8 @@
 using System;
+using KitchenChaos.Manager;
 using KitchenChaos.Player;
 using KitchenChaos.SO;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace KitchenChaos.Counter
@@ -19,16 +21,28 @@ namespace KitchenChaos.Counter
 
         private void Update()
         {
+            if (!IsServer) return;
             _plateSpawnTimer += Time.deltaTime;
             if (_plateSpawnTimer > plateSpawnTime)
             {
                 if (_plateSpawnAmount < plateSpawnAmountMax)
                 {
-                    OnPlateSpawn?.Invoke(this, EventArgs.Empty);
-                    _plateSpawnAmount++;
-                    _plateSpawnTimer = 0f;
+                    SpawnPlateServerRpc();
                 }
             }
+        }
+
+        [ServerRpc]
+        private void SpawnPlateServerRpc()
+        {
+            SpawnPlateClientRpc();
+        }
+        [ClientRpc]
+        private void SpawnPlateClientRpc()
+        {
+            OnPlateSpawn?.Invoke(this, EventArgs.Empty);
+            _plateSpawnAmount++;
+            _plateSpawnTimer = 0f;
         }
 
         public override void Interact(PlayerControl player)
@@ -37,10 +51,25 @@ namespace KitchenChaos.Counter
             {
                 return;
             }
-
-            OnPlateRemove?.Invoke(this, EventArgs.Empty);
-            _plateSpawnAmount--;
+            if (GameManager.Instance.IsGamePause)
+            {
+                return;
+            }
             KitchenObject.SpawnKitchenObject(kitchenObjectSo, player);
+            InteractLogicServerRpc();
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void InteractLogicServerRpc()
+        {
+            InteractLogicClientRpc();
+        }
+
+        [ClientRpc]
+        private void InteractLogicClientRpc()
+        {
+            _plateSpawnAmount--;
+            OnPlateRemove?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,4 +1,4 @@
-using KitchenChaos.Interface;
+using KitchenChaos.Manager;
 using KitchenChaos.Player;
 using KitchenChaos.SO;
 using UnityEngine;
@@ -11,6 +11,10 @@ namespace KitchenChaos.Counter
 
         public override void Interact(PlayerControl player)
         {
+            if (GameManager.Instance.IsGamePause)
+            {
+                return;
+            }
             if (!HasKitchenObject)
             {
                 if (!player.HasKitchenObject)
@@ -33,7 +37,7 @@ namespace KitchenChaos.Counter
                     {
                         if (plateKitchenObject.TryAddIngredient(KitchenObj.KitchenObjectSo))
                         {
-                            KitchenObj.DestroySelf();
+                            KitchenObject.DestroyKitchenObject(KitchenObj);
                         }
                     }
                     else
@@ -42,7 +46,7 @@ namespace KitchenChaos.Counter
                         {
                             if (plateKitchenObject.TryAddIngredient(player.KitchenObj.KitchenObjectSo))
                             {
-                                player.KitchenObj.DestroySelf();
+                                KitchenObject.DestroyKitchenObject(player.KitchenObj);
                             }
                         }
                     }

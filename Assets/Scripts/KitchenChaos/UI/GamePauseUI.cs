@@ -1,4 +1,5 @@
 using KitchenChaos.Manager;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ namespace KitchenChaos.UI
             });
             mainMenuButton.onClick.AddListener(() =>
             {
+                NetworkManager.Singleton.Shutdown();
                 Loader.Load(Loader.Scene.MainMenuScene);
             });
             optionsButton.onClick.AddListener(() =>
@@ -30,8 +32,8 @@ namespace KitchenChaos.UI
 
         private void Start()
         {
-            GameManager.Instance.OnGamePause += (sender, e) => Show();
-            GameManager.Instance.OnGameUnPause += (sender, e) => Hide();
+            GameManager.Instance.OnLocalGamePause += (sender, e) => Show();
+            GameManager.Instance.OnLocalGameUnpause += (sender, e) => Hide();
 
             Hide();
         }

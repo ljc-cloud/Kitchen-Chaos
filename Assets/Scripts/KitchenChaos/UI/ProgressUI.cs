@@ -1,5 +1,4 @@
 using System;
-using KitchenChaos.Counter;
 using KitchenChaos.Interface;
 using UnityEngine;
 using UnityEngine.UI;

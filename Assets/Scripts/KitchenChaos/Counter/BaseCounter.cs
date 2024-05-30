@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace KitchenChaos.Counter
 {
-    public class BaseCounter : MonoBehaviour, IKitchenObjectParent
+    public class BaseCounter : NetworkBehaviour, IKitchenObjectParent
     {
         [SerializeField] private Transform counterTopPoint;
 
@@ -50,7 +50,7 @@ namespace KitchenChaos.Counter
 
         public NetworkObject GetNetworkObject()
         {
-            return null;
+            return NetworkObject;
         }
     }
 }

@@ -1,7 +1,6 @@
 using KitchenChaos.Counter;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace KitchenChaos.UI
 {
@@ -11,6 +10,7 @@ namespace KitchenChaos.UI
         private Animator _animator;
 
         [SerializeField] private StoveCounter stoveCounter;
+        [SerializeField] private Image warningImage;
 
         private void Awake()
         {
@@ -27,6 +27,7 @@ namespace KitchenChaos.UI
         {
             Show();
             bool playAnim = stoveCounter.IsFried && e.progressNormalized > .5f;
+            warningImage.gameObject.SetActive(playAnim);
             _animator.SetBool(IsFlashHash, playAnim);
         }
         private void Show() => gameObject.SetActive(true);

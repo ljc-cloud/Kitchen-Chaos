@@ -15,13 +15,12 @@ namespace KitchenChaos.Counter
 
         public override void Interact(PlayerControl player)
         {
-            Debug.Log($"DeliveryCounter.Interact Invoked, Player HasKitchenObject:{player.HasKitchenObject}");
             if (player.HasKitchenObject)
             {
                 if (player.KitchenObj.TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
                 {
                     DeliveryManager.Instance.DeliveryRecipe(plateKitchenObject);
-                    player.KitchenObj.DestroySelf();
+                    KitchenObject.DestroyKitchenObject(player.KitchenObj);
                 }
             }
         }

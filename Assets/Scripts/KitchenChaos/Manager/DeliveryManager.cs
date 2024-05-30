@@ -62,7 +62,6 @@ namespace KitchenChaos.Manager
 
         public void DeliveryRecipe(PlateKitchenObject plateKitchenObject)
         {
-            Debug.Log("DeliveryRecipe Invoked");
             for (int i = 0; i < WaitingRecipeSoList.Count; i++)
             {
                 RecipeSO recipeSo = WaitingRecipeSoList[i];
