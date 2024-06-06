@@ -21,6 +21,12 @@ namespace KitchenChaos.UI
             UpdateVisual();
         }
 
+        private void OnDestroy()
+        {
+            DeliveryManager.Instance.OnRecipeSpawned -= DeliveryManagerOnRecipeSpawned;
+            DeliveryManager.Instance.OnRecipeCompleted -= DeliveryManagerOnRecipeCompleted; ;
+        }
+
         private void DeliveryManagerOnRecipeCompleted(object sender, System.EventArgs e)
         {
             UpdateVisual();

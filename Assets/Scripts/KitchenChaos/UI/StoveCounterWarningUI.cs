@@ -22,6 +22,10 @@ namespace KitchenChaos.UI
             stoveCounter.OnProgressbarChanged += StoveCounter_OnProgressbarChanged;
             Hide();
         }
+        private void OnDestroy()
+        {
+            stoveCounter.OnProgressbarChanged -= StoveCounter_OnProgressbarChanged;
+        }
 
         private void StoveCounter_OnProgressbarChanged(object sender, Interface.IHasProgress.OnProgressbarChangedEventArgs e)
         {

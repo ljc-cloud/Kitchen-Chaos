@@ -13,6 +13,11 @@ namespace KitchenChaos.Counter
             stoveCounter.OnStateChanged += StoveCounterOnOnStateChanged;
         }
 
+        private void OnDestroy()
+        {
+            stoveCounter.OnStateChanged -= StoveCounterOnOnStateChanged;
+        }
+
         private void StoveCounterOnOnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
         {
             bool show = e.state == StoveCounter.State.Frying || e.state == StoveCounter.State.Fried;

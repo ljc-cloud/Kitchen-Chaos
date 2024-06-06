@@ -24,6 +24,11 @@ namespace KitchenChaos
             kitchenObjectSoGameObjectList.ForEach(item => item.gameObject.SetActive(false));
         }
 
+        private void OnDestroy()
+        {
+            plateKitchenObject.OnIngredientAdded -= PlateKitchenObjectOnOnIngredientAdded;
+        }
+
         private void PlateKitchenObjectOnOnIngredientAdded(object sender, PlateKitchenObject.OnIngredientAddedEventArgs e)
         {
             var gameObjectVisual = kitchenObjectSoGameObjectList.Find(item => Equals(e.kitchenObjectSo, item.kitchenObjectSo)).gameObject;

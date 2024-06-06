@@ -1,4 +1,5 @@
-﻿using KitchenChaos.Player;
+﻿using KitchenChaos.Network;
+using KitchenChaos.Player;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -77,6 +78,23 @@ namespace KitchenChaos.Manager
                 NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
                 // 当所有client场景完成加载
                 NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += NetworkManager_OnLoadEventCompleted;
+            }
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            GameInput.Instance.OnGamePauseAction -= GameInput_OnGamePauseAction;
+            GameInput.Instance.OnInteractAction -= GameInput_OnInteractAction;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            if (IsServer)
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnectCallback;
+                NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= NetworkManager_OnLoadEventCompleted;
             }
         }
 

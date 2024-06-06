@@ -20,6 +20,11 @@ namespace KitchenChaos.UI
             stoveCounter.OnProgressbarChanged += StoveCounter_OnProgressbarChanged;
         }
 
+        private void OnDestroy()
+        {
+            stoveCounter.OnProgressbarChanged -= StoveCounter_OnProgressbarChanged;
+        }
+
         private void StoveCounter_OnProgressbarChanged(object sender, Interface.IHasProgress.OnProgressbarChangedEventArgs e)
         {
             bool playAnim = stoveCounter.IsFried && e.progressNormalized > .5f;

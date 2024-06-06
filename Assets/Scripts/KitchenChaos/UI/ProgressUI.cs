@@ -28,6 +28,14 @@ namespace KitchenChaos.UI
             Hide();
         }
 
+        private void OnDestroy()
+        {
+            if (_hasProgress != null)
+            {
+                _hasProgress.OnProgressbarChanged -= CuttingCounterOnOnProgressbarChanged;
+            }
+        }
+
         private void CuttingCounterOnOnProgressbarChanged(object sender, IHasProgress.OnProgressbarChangedEventArgs e)
         {
             if (e.progressNormalized == 0f || Math.Abs(e.progressNormalized - 1f) < 0.01f)
@@ -39,7 +47,7 @@ namespace KitchenChaos.UI
                 Show();
             }
             progressbar.fillAmount = e.progressNormalized;
-            
+
         }
 
         private void Show() => gameObject.SetActive(true);

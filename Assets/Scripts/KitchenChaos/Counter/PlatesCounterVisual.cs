@@ -22,6 +22,12 @@ namespace KitchenChaos.Counter
             platesCounter.OnPlateRemove += PlatesCounterOnOnPlateRemove;
         }
 
+        private void OnDestroy()
+        {
+            platesCounter.OnPlateSpawn -= PlatesCounterOnOnPlateSpawn;
+            platesCounter.OnPlateRemove -= PlatesCounterOnOnPlateRemove;
+        }
+
         private void PlatesCounterOnOnPlateRemove(object sender, EventArgs e)
         {
             if (_platesSpawnGameObjectList.Count == 0) return;

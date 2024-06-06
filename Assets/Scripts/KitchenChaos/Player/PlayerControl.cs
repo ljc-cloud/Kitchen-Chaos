@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using KitchenChaos.Counter;
 using KitchenChaos.Interface;
 using KitchenChaos.Manager;
+using KitchenChaos.Network;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -29,6 +30,7 @@ namespace KitchenChaos.Player
         [SerializeField] private LayerMask collisionLayer;
         [SerializeField] private List<Vector3> spawnPositionList;
         [SerializeField] private Transform kitchenObjectHolderPoint;
+        [SerializeField] private PlayerVisual playerVisual;
 
         private Vector3 _lastInteractDir;
         private BaseCounter _selectedCounter;
@@ -63,8 +65,11 @@ namespace KitchenChaos.Player
             {
                 LocalInstance = this;
             }
-            transform.position = spawnPositionList[(int)OwnerClientId];
+            var playerIndex = KitchenGameMultiPlayer.Instance.GetPlayerDataIndexByClientId(OwnerClientId);
+            transform.position = spawnPositionList[playerIndex];
             OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
+            var playerData = KitchenGameMultiPlayer.Instance.GetPlayerDataByClientId(OwnerClientId);
+            playerVisual.SetPlayerColor(KitchenGameMultiPlayer.Instance.GetPlayerColorByIndex(playerData.ColorId));
 
             if (IsServer)
             {
@@ -108,8 +113,6 @@ namespace KitchenChaos.Player
         public override void OnDestroy()
         {
             base.OnDestroy();
-            OnPickupSomething = null;
-            OnSelectedCounterChanged = null;
             GameInput.Instance.OnInteractAction -= GameInputOnOnInteractAction;
             GameInput.Instance.OnInteractAlternateAction -= GameInputOnOnInteractAlternateAction;
         }

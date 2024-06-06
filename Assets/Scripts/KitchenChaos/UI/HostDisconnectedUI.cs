@@ -22,6 +22,14 @@ namespace KitchenChaos.UI
             }
         }
 
+        private void OnDestroy()
+        {
+            if (NetworkManager.Singleton != null)
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnectCallback;
+            }
+        }
+
         private void Show() => gameObject.SetActive(true);
         private void Hide() => gameObject.SetActive(false);
     }

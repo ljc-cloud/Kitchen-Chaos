@@ -31,6 +31,12 @@ namespace KitchenChaos.UI
             gameObject.SetActive(false);
         }
 
+        private void OnDestroy()
+        {
+            DeliveryManager.Instance.OnRecipeSuccess -= DeliveryManager_OnRecipeSuccess;
+            DeliveryManager.Instance.OnRecipeFail -= DeliveryManager_OnRecipeFail;
+        }
+
         private void DeliveryManager_OnRecipeSuccess(object sender, System.EventArgs e)
         {
             gameObject.SetActive(true);

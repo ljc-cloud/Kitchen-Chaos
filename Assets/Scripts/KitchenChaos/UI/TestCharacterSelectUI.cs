@@ -12,7 +12,7 @@ namespace KitchenChaos.UI
         {
             readyButton.onClick.AddListener(() =>
             {
-                CharacterSelectReady.Instance.SetPlayerReady();
+                //CharacterSelectReady.Instance.SetPlayerReady(true);
             });
         }
     }

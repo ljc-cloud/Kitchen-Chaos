@@ -1,7 +1,6 @@
 using KitchenChaos.Counter;
 using KitchenChaos.Player;
 using KitchenChaos.SO;
-using Unity.VisualScripting;
 using UnityEngine;
 namespace KitchenChaos.Manager
 {
@@ -40,6 +39,17 @@ namespace KitchenChaos.Manager
             CuttingCounter.OnAnyCut += CuttingCounterOnAnyCut;
             BaseCounter.OnSomethingPlaced += BaseCounterOnSomethingPlaced;
             TrashCounter.OnDropSomething += TrashCounterOnDropSomething;
+        }
+
+        private void OnDestroy()
+        {
+            DeliveryManager.Instance.OnRecipeSuccess -= DeliveryManagerOnRecipeSuccess;
+            DeliveryManager.Instance.OnRecipeFail -= DeliveryManagerOnRecipeFail;
+            PlayerControl.OnAnyPickUpSomething -= PlayerOnPickupSomething;
+            //PlayerControl.Instance.OnPickupSomething += PlayerOnPickupSomething;
+            CuttingCounter.OnAnyCut -= CuttingCounterOnAnyCut;
+            BaseCounter.OnSomethingPlaced -= BaseCounterOnSomethingPlaced;
+            TrashCounter.OnDropSomething -= TrashCounterOnDropSomething;
         }
 
         private void TrashCounterOnDropSomething(object sender, System.EventArgs e)

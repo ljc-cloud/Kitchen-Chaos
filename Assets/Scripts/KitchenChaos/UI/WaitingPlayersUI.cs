@@ -14,6 +14,12 @@ namespace KitchenChaos.UI
             Hide();
         }
 
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnLocalPlayerReady -= GameManager_OnLocalPlayerReady;
+            GameManager.Instance.OnStateChanged -= GameManager_OnStateChanged;
+        }
+
         private void GameManager_OnStateChanged(object sender, System.EventArgs e)
         {
             if (GameManager.Instance.IsCountdownToStart)

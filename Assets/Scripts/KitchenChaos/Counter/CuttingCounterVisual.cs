@@ -20,6 +20,11 @@ namespace KitchenChaos.Counter
             cuttingCounter.OnCut += CuttingCounterOnOnCut;
         }
 
+        private void OnDestroy()
+        {
+            cuttingCounter.OnCut -= CuttingCounterOnOnCut;
+        }
+
         private void CuttingCounterOnOnCut(object sender, EventArgs e)
         {
             _animator.SetTrigger(_cutHash);

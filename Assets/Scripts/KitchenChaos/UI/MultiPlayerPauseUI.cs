@@ -16,6 +16,16 @@ namespace KitchenChaos.UI
             Hide();
         }
 
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnMultiPlayerGamePause += GameManager_OnMultiPlayerGamePause;
+            GameManager.Instance.OnMultiPlayerGameUnpause += GameManager_OnMultiPlayerUnpause;
+            if (NetworkManager.Singleton != null)
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
+            }
+        }
+
         private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
         {
             if (clientId == NetworkManager.ServerClientId)

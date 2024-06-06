@@ -28,6 +28,11 @@ namespace KitchenChaos.UI
             pauseKeyText.text = GameInput.Instance.GetKeyBindingString(GameInput.KeyBinding.Pause);
         }
 
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnLocalPlayerReady += GameManager_OnLocalPlayerReady;
+        }
+
         private void GameManager_OnLocalPlayerReady(object sender, System.EventArgs e)
         {
             if (GameManager.Instance.IsLocalPlayerReady)

@@ -32,10 +32,26 @@ namespace KitchenChaos.UI
 
         private void Start()
         {
-            GameManager.Instance.OnLocalGamePause += (sender, e) => Show();
-            GameManager.Instance.OnLocalGameUnpause += (sender, e) => Hide();
+            GameManager.Instance.OnLocalGamePause += GameManager_OnLocalGamePause;
+            GameManager.Instance.OnLocalGameUnpause += GameManager_OnLocalGameUnpause;
 
             Hide();
+        }
+
+        private void GameManager_OnLocalGameUnpause(object sender, System.EventArgs e)
+        {
+            Hide();
+        }
+
+        private void GameManager_OnLocalGamePause(object sender, System.EventArgs e)
+        {
+            Show();
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnLocalGamePause -= GameManager_OnLocalGamePause;
+            GameManager.Instance.OnLocalGameUnpause -= GameManager_OnLocalGameUnpause;
         }
 
         private void Show() => gameObject.SetActive(true);

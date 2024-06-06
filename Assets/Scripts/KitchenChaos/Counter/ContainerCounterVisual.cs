@@ -20,6 +20,11 @@ namespace KitchenChaos.Counter
             containerCounter.OnPlayerDragObject += ContainerCounterOnOnPlayerDragObject;
         }
 
+        private void OnDestroy()
+        {
+            containerCounter.OnPlayerDragObject -= ContainerCounterOnOnPlayerDragObject;
+        }
+
         private void ContainerCounterOnOnPlayerDragObject(object sender, EventArgs e)
         {
             _animator.SetTrigger(OpenCloseHash);

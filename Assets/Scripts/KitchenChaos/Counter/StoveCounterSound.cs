@@ -25,6 +25,12 @@ namespace KitchenChaos.Counter
             stoveCounter.OnProgressbarChanged += StoveCounter_OnProgressbarChanged;
         }
 
+        private void OnDestroy()
+        {
+            stoveCounter.OnStateChanged -= StoveCounterOnStateChanged;
+            stoveCounter.OnProgressbarChanged -= StoveCounter_OnProgressbarChanged;
+        }
+
         private void Update()
         {
             if (_playWarningSound)

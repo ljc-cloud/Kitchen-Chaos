@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace KitchenChaos.Network
 {
@@ -8,7 +8,9 @@ namespace KitchenChaos.Network
     {
         private Dictionary<ulong, bool> _playerReadyDict;
 
-        public static CharacterSelectReady Instance {  get; private set; }
+        public static CharacterSelectReady Instance { get; private set; }
+
+        public event EventHandler OnPlayerReadyChanged;
 
         private void Awake()
         {
@@ -16,16 +18,16 @@ namespace KitchenChaos.Network
             _playerReadyDict = new();
         }
 
-        public void SetPlayerReady()
+        public void SetPlayerReady(bool ready)
         {
-            SetPlayerReadyServerRpc();
+            SetPlayerReadyServerRpc(ready);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void SetPlayerReadyServerRpc(ServerRpcParams serverRpcParams = default)
+        private void SetPlayerReadyServerRpc(bool ready, ServerRpcParams serverRpcParams = default)
         {
-            _playerReadyDict[serverRpcParams.Receive.SenderClientId] = true;
-
+            _playerReadyDict[serverRpcParams.Receive.SenderClientId] = ready;
+            SetPlayerReadyClientRpc(ready, serverRpcParams.Receive.SenderClientId);
             bool allReady = true;
             foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
@@ -37,8 +39,27 @@ namespace KitchenChaos.Network
             }
             if (allReady)
             {
+                KitchenGameLobby.Instance.DeleteLobby();
                 Loader.LoadNetwork(Loader.Scene.GameScene);
             }
         }
+
+        [ClientRpc]
+        private void SetPlayerReadyClientRpc(bool ready, ulong clientId)
+        {
+            _playerReadyDict[clientId] = ready;
+            OnPlayerReadyChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public bool IsPlayerReady(ulong clientId)
+        {
+            return _playerReadyDict.ContainsKey(clientId) && _playerReadyDict[clientId];
+        }
+
+        public bool IsLocalPlayerReady()
+        {
+            return _playerReadyDict.ContainsKey(NetworkManager.Singleton.LocalClientId) && _playerReadyDict[NetworkManager.Singleton.LocalClientId];
+        }
+
     }
 }

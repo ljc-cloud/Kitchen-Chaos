@@ -17,6 +17,10 @@ namespace KitchenChaos.UI
         {
             plateKitchenObject.OnIngredientAdded += PlateKitchenObjectOnOnIngredientAdded;
         }
+        private void OnDestroy()
+        {
+            plateKitchenObject.OnIngredientAdded -= PlateKitchenObjectOnOnIngredientAdded;
+        }
 
         private void PlateKitchenObjectOnOnIngredientAdded(object sender, PlateKitchenObject.OnIngredientAddedEventArgs e)
         {
