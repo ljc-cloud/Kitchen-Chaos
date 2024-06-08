@@ -21,6 +21,7 @@ namespace KitchenChaos.Counter
 
         private void Update()
         {
+            // 规定只有Server能生成盘子，然后广播到所有Client上进行同步
             if (!IsServer) return;
             _plateSpawnTimer += Time.deltaTime;
             if (_plateSpawnTimer > plateSpawnTime)
@@ -37,6 +38,9 @@ namespace KitchenChaos.Counter
         {
             SpawnPlateClientRpc();
         }
+        /// <summary>
+        /// 广播所有Clients 进行盘子生成同步
+        /// </summary>
         [ClientRpc]
         private void SpawnPlateClientRpc()
         {
@@ -59,6 +63,9 @@ namespace KitchenChaos.Counter
             InteractLogicServerRpc();
         }
 
+        /// <summary>
+        /// 进行广播同步，同步减少一个盘子
+        /// </summary>
         [ServerRpc(RequireOwnership = false)]
         private void InteractLogicServerRpc()
         {

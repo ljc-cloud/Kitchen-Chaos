@@ -13,6 +13,10 @@ namespace KitchenChaos.Counter
             Instance = this;
         }
 
+        /// <summary>
+        /// 投递已经做好的Recipe
+        /// </summary>
+        /// <param name="player"></param>
         public override void Interact(PlayerControl player)
         {
             if (player.HasKitchenObject)

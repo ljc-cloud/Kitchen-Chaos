@@ -4,6 +4,9 @@ using Unity.Netcode;
 
 namespace KitchenChaos.Network
 {
+    /// <summary>
+    /// CharacterSelectScene Manage Player Ready
+    /// </summary>
     public class CharacterSelectReady : NetworkBehaviour
     {
         private Dictionary<ulong, bool> _playerReadyDict;

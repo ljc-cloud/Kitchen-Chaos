@@ -5,10 +5,17 @@ using UnityEngine;
 
 namespace KitchenChaos.Counter
 {
+    /// <summary>
+    /// 空Counter 实现
+    /// </summary>
     public class ClearCounter : BaseCounter
     {
-        [SerializeField] private KitchenObjectSO kitchenObjectSo;
+        //[SerializeField] private KitchenObjectSO kitchenObjectSo;
 
+        /// <summary>
+        /// 取走、放置 交互
+        /// </summary>
+        /// <param name="player"></param>
         public override void Interact(PlayerControl player)
         {
             if (GameManager.Instance.IsGamePause)

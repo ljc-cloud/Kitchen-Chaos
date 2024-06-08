@@ -1,3 +1,4 @@
+using KitchenChaos.Network;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,13 @@ namespace KitchenChaos.UI
         private void Start()
         {
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
-            playAgainButton.onClick.AddListener(() => { Loader.Load(Loader.Scene.MainMenuScene); });
+            KitchenGameMultiPlayer.Instance.OnKickPlayer += KitchenGameMultiPlayer_OnKickPlayer;
+            playAgainButton.onClick.AddListener(() => Loader.Load(Loader.Scene.MainMenuScene));
+            Hide();
+        }
+
+        private void KitchenGameMultiPlayer_OnKickPlayer(object sender, System.EventArgs e)
+        {
             Hide();
         }
 

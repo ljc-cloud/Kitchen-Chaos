@@ -7,8 +7,12 @@ using UnityEngine;
 
 namespace KitchenChaos.Counter
 {
+    /// <summary>
+    /// ContainerCounter
+    /// </summary>
     public class ContainerCounter : BaseCounter
     {
+        // Container
         [SerializeField] private KitchenObjectSO kitchenObjectSo;
 
         public event EventHandler OnPlayerDragObject;

@@ -20,7 +20,7 @@ namespace KitchenChaos
             kickButton.onClick.AddListener(() =>
             {
                 var playerData = KitchenGameMultiPlayer.Instance.GetPlayerDataByPlayerIndex(playerIndex);
-                //KitchenGameLobby.Instance.KickPlayer(playerData.playerId);
+                KitchenGameLobby.Instance.KickPlayer(playerData.PlayerId.ToString());
                 KitchenGameMultiPlayer.Instance.KickPlayer(playerData.ClientId);
             });
         }
@@ -31,7 +31,8 @@ namespace KitchenChaos
             CharacterSelectReady.Instance.OnPlayerReadyChanged += CharacterSelectReady_OnPlayerReadyChanged;
             UpdateCharacterVisual();
             UpdatePlayerReady();
-            kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer);
+            kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer &&
+                !KitchenGameMultiPlayer.Instance.PlayerIndexIsServer(playerIndex));
         }
 
         private void OnDestroy()

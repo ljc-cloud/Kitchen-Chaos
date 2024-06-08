@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace KitchenChaos.Counter
 {
+    /// <summary>
+    /// ContainerCounter ÊÓ¾õÐ§¹û
+    /// </summary>
     public class ContainerCounterVisual : MonoBehaviour
     {
         private Animator _animator;

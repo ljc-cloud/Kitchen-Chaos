@@ -4,6 +4,9 @@ using KitchenChaos.SO;
 using UnityEngine;
 namespace KitchenChaos.Manager
 {
+    /// <summary>
+    /// 音效管理类
+    /// </summary>
     public class SoundManager : MonoBehaviour
     {
         private const string PlayerPrefsSoundEffectVolume = "SoundEffect:";
@@ -35,7 +38,6 @@ namespace KitchenChaos.Manager
             DeliveryManager.Instance.OnRecipeSuccess += DeliveryManagerOnRecipeSuccess;
             DeliveryManager.Instance.OnRecipeFail += DeliveryManagerOnRecipeFail;
             PlayerControl.OnAnyPickUpSomething += PlayerOnPickupSomething;
-            //PlayerControl.Instance.OnPickupSomething += PlayerOnPickupSomething;
             CuttingCounter.OnAnyCut += CuttingCounterOnAnyCut;
             BaseCounter.OnSomethingPlaced += BaseCounterOnSomethingPlaced;
             TrashCounter.OnDropSomething += TrashCounterOnDropSomething;
@@ -46,7 +48,6 @@ namespace KitchenChaos.Manager
             DeliveryManager.Instance.OnRecipeSuccess -= DeliveryManagerOnRecipeSuccess;
             DeliveryManager.Instance.OnRecipeFail -= DeliveryManagerOnRecipeFail;
             PlayerControl.OnAnyPickUpSomething -= PlayerOnPickupSomething;
-            //PlayerControl.Instance.OnPickupSomething += PlayerOnPickupSomething;
             CuttingCounter.OnAnyCut -= CuttingCounterOnAnyCut;
             BaseCounter.OnSomethingPlaced -= BaseCounterOnSomethingPlaced;
             TrashCounter.OnDropSomething -= TrashCounterOnDropSomething;

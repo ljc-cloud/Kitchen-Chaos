@@ -8,8 +8,14 @@ using UnityEngine;
 
 namespace KitchenChaos.Counter
 {
+    /// <summary>
+    /// CuttingCounter 
+    /// </summary>
     public class CuttingCounter : BaseCounter, IHasProgress
     {
+        /// <summary>
+        /// ¿ÉÒÔCut µÄ ²ËÆ×
+        /// </summary>
         [SerializeField] private CuttingRecipeSO[] cuttingRecipeSoArr;
 
         public event EventHandler<IHasProgress.OnProgressbarChangedEventArgs> OnProgressbarChanged;
@@ -23,7 +29,7 @@ namespace KitchenChaos.Counter
         {
             OnAnyCut = null;
         }
-
+        
         public override void Interact(PlayerControl player)
         {
             if (!HasKitchenObject)
@@ -59,6 +65,7 @@ namespace KitchenChaos.Counter
                 }
             }
         }
+
         [ServerRpc(RequireOwnership = false)]
         private void InteractLogicPlaceObjectOnCounterServerRpc(NetworkObjectReference kitchenObjectNetworkReference)
         {
@@ -77,7 +84,10 @@ namespace KitchenChaos.Counter
             });
         }
 
-
+        /// <summary>
+        /// ÇÐËéKitchenObject
+        /// </summary>
+        /// <param name="player"></param>
         public override void InteractAlternate(PlayerControl player)
         {
             if (HasKitchenObject && HasRecipeWithInput(out CuttingRecipeSO cuttingRecipeSo, KitchenObj.KitchenObjectSo))

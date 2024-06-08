@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace KitchenChaos.Counter
 {
+    /// <summary>
+    /// 锅炉Counter 实现
+    /// </summary>
     public class StoveCounter : BaseCounter, IHasProgress
     {
         [SerializeField] private FryingRecipeSO[] fryingRecipeSoArr;
@@ -31,6 +34,9 @@ namespace KitchenChaos.Counter
             public State state;
         }
 
+        /// <summary>
+        /// 锅炉Counter上的状态机，记录KitchenObject烹煮状态
+        /// </summary>
         public enum State
         {
             Idle,
@@ -82,6 +88,9 @@ namespace KitchenChaos.Counter
             });
         }
 
+        /// <summary>
+        /// 实时更新KitchenObject的烹煮状态
+        /// </summary>
         private void Update()
         {
             if (!HasKitchenObject)
@@ -92,7 +101,6 @@ namespace KitchenChaos.Counter
             {
                 return;
             }
-
             switch (_state.Value)
             {
                 case State.Idle:

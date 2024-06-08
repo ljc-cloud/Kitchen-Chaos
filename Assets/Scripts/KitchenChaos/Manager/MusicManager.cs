@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace KitchenChaos.Manager
 {
+    /// <summary>
+    /// MusicManager
+    /// </summary>
     public class MusicManager : MonoBehaviour
     {
         private const string PlayerPrefsMusicVolume = "Music:";

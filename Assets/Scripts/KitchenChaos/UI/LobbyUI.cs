@@ -1,5 +1,7 @@
 using KitchenChaos.Network;
+using System.Collections.Generic;
 using TMPro;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +16,8 @@ namespace KitchenChaos.UI
         [SerializeField] private TMP_InputField joinCodeInputField;
         [SerializeField] private TMP_InputField playNameInputField;
         [SerializeField] private LobbyCreateUI lobbyCreateUI;
+        [SerializeField] private GameObject lobbyListContainer;
+        [SerializeField] private GameObject lobbyTemplate;
 
         private void Awake()
         {
@@ -36,6 +40,37 @@ namespace KitchenChaos.UI
                 await KitchenGameLobby.Instance.JoinLobbyByCode(joinCodeInputField.text);
                 KitchenGameMultiPlayer.Instance.PlayerName = playNameInputField.text;
             });
+        }
+
+        private void Start()
+        {
+            KitchenGameLobby.Instance.OnLobbyListChanged += KitchenGameLobby_OnLobbyListChanged;
+            lobbyTemplate.SetActive(false);
+        }
+        private void OnDestroy()
+        {
+            KitchenGameLobby.Instance.OnLobbyListChanged -= KitchenGameLobby_OnLobbyListChanged;
+        }
+
+        private void UpdateLobbyList(List<Lobby> lobbyList)
+        {
+            foreach (Transform child in lobbyListContainer.transform)
+            {
+                if (child == lobbyTemplate.transform) continue;
+                Destroy(child.gameObject);
+            }
+
+            foreach (var lobby in lobbyList)
+            {
+                var template = Instantiate(lobbyTemplate, lobbyListContainer.transform);
+                template.SetActive(true);
+                template.GetComponent<LobbyListSingleUI>().SetLobby(lobby);
+            }
+        }
+
+        private void KitchenGameLobby_OnLobbyListChanged(object sender, KitchenGameLobby.OnLobbyListChangedEventArgs e)
+        {
+            UpdateLobbyList(e.LobbyList);
         }
     }
 }
